@@ -12,32 +12,33 @@ class GoodreadsHelper:
     self.authorized = False
 
   def authorize(self, client_key, client_secret):
+    self.client_key, self.client_secret = client_key, client_secret
     self.oauth = OAuth1Session(self.client_key,
         client_secret=self.client_secret)
-    fetch_response = oauth.fetch_request_token(REQUEST_TOKEN_URL)
+    fetch_response = self.oauth.fetch_request_token(GoodreadsHelper.REQUEST_TOKEN_URL)
     self.resource_owner_key = fetch_response.get('oauth_token')
     self.resource_owner_secret = fetch_response.get('oauth_token_secret')
-    authorization_url = oauth.authorization_url(BASE_AUTHORIZATION_URL)
+    authorization_url = self.oauth.authorization_url(GoodreadsHelper.BASE_AUTHORIZATION_URL)
     return redirect(authorization_url)  # redirects to /oauth-callback
 
   def handle_callback(self, redirect_response):
-    oauth_response = oauth.parse_authorization_response(redirect_response)
-    verifier = oauth_response.get('oauth_verifier')
-    self.oauth = OAuth1Session(client_key, client_secret=client_secret,
+    oauth_response = self.oauth.parse_authorization_response(redirect_response)
+    verifier = oauth_response.get('oauth_token')
+    self.oauth = OAuth1Session(self.client_key, client_secret=self.client_secret,
         resource_owner_key=self.resource_owner_key,
         resource_owner_secret=self.resource_owner_secret,
         verifier=verifier)
     return self.__get_access_token()
 
   def __get_access_token(self):
-    oauth_tokens = oauth.fetch_access_token(ACCESS_TOKEN_URL)
+    oauth_tokens = self.oauth.fetch_access_token(GoodreadsHelper.ACCESS_TOKEN_URL)
     self.resource_owner_key = oauth_tokens.get('oauth_token')
     self.resource_owner_secret = oauth_tokens.get('oauth_token_secret')
-    self.oauth = OAuth1Session(client_key, client_secret=client_secret,
+    self.oauth = OAuth1Session(self.client_key, client_secret=self.client_secret,
         resource_owner_key=self.resource_owner_key,
         resource_owner_secret=self.resource_owner_secret)
-    self.authoried = True
-    return redirect(url_for('home')) # probably wont work
+    self.authorized = True
+    return redirect('/') # probably wont work
 
   # # returns books as
   # def get_books(self):

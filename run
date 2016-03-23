@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export BOOK_MANAGER_SETTINGS=$HOME/Development/.book-manager/settings.cfg
+python app.py

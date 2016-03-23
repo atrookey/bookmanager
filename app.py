@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
-from goodreads import GoodreadsHelper
+import goodreads_helper
 
 app = Flask(__name__)
 app.config.from_envvar('BOOK_MANAGER_SETTINGS')
 
-goodreads = GoodreadsHelper()
+goodreads = goodreads_helper.GoodreadsHelper()
 
 @app.route('/')
 def home():
@@ -14,7 +14,8 @@ def home():
     return goodreads.authorize(client_key, client_secret)
   return render_template('pages/home.html')
 
-@app.route('/oauth-callback')
+# TODO (atrookey) change to /oauth-callback
+@app.route('/authorization_redirect')
 def authorization_redirect():
   redirect_response = request.url
   return goodreads.handle_callback(redirect_response)
@@ -26,7 +27,8 @@ def not_found_error(error):
 if not app.debug:
   file_handler = FileHandler('error.log')
   file_handler.setFormatter(
-      Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
+      Formatter('%(asctime)s %(levelname)s: %(message)s '
+          '[in %(pathname)s:%(lineno)d]')
   )
   app.logger.setLevel(logging.INFO)
   file_handler.setLevel(logging.INFO)
