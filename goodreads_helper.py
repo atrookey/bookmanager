@@ -39,24 +39,24 @@ class GoodreadsHelper:
     self.authoried = True
     return redirect(url_for('home')) # probably wont work
 
-  # returns books as
-  def get_books(self):
-    if self.authorized:
-      books_xml = self.__get_books_from_goodreads()
-      books = self.__objectify_xml(books_xml)
-      return books
-    return []
-
-  def __get_books_from_goodreads(self):
-    request = requests.get()
-    return
-
-  def __get_uid_from_goodreads(self):
-    request = requests.get('https://www.goodreads.com/api/auth_user')
-    return request.data
-
-  def __get_uid_from_xml(self, xml):
-    return
-
-  def __objectify_books_xml(self, books_xml):
-    return
+  # # returns books as
+  # def get_books(self):
+  #   if self.authorized:
+  #     books_xml = self.__get_books_from_goodreads()
+  #     books = self.__objectify_xml(books_xml)
+  #     return books
+  #   return []
+  #
+  # def __get_books_from_goodreads(self):
+  #   request = requests.get()
+  #   return
+  #
+  # def __get_uid_from_goodreads(self):
+  #   response = requests.get('https://www.goodreads.com/api/auth_user')
+  #   return request.data
+  #
+  # def __get_uid_from_xml(self, xml):
+  #   return
+  #
+  # def __objectify_books_xml(self, books_xml):
+  #   return
